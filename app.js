@@ -1,32 +1,29 @@
 const dotenv = require('dotenv');
 dotenv.config();
+const express = require('express');
+const mongoose = require('mongoose')
 const Web3 = require("web3");
 const web3  =  new Web3("https://ropsten.infura.io/v3/1679001d1bb04d6fb6a4b0ed4590b846");
+const web3_bnb = new Web3('https://data-seed-prebsc-1-s1.binance.org:8545');
+const app = express()
+app.use(express.json());
+const controller= require('./controller/controller.js');
+const receiptApi = require('./model/db.js');
+const port = 3000
 
 // fetch a balance
-web3.eth.getBalance('0x2675AA4Ce16B8F8c1d69023f559fB82439f14AB2', async (err, result) => {
-    if (err) {
-        console.log(err);
-        return;
-    }
-    let balance = web3.utils.fromWei(result, "ether");
-    console.log(balance + " ETH");
-});
+app.get('/balance', controller.balance);
 
 // For Transaction
-async function eth_transaction(){
-    var value = web3.utils.toWei('0.03', 'ether')   
-  var SignedTransaction = await web3.eth.accounts.signTransaction({
-       to:  process.env.to_address,
-       value: value,
-       gas: 2000000,
-       nonce: web3.eth.getTransactionCount( process.env.from_address)
-  },   process.env.Private_Key);
+app.post('/transaction',controller.transaction);
 
-  web3.eth.sendSignedTransaction(SignedTransaction.rawTransaction).then((receipt) => {
-        console.log(receipt);
-  });
-}
-eth_transaction();
+// for Binance fetch balance
+app.get('/bnbBalance',controller.bnbBalance);
 
+//Binance For Transaction 
+app.post('/bnbTransaction',controller.bnbTransaction);
+
+app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`)
+  })
 
