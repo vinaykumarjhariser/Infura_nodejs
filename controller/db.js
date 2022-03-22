@@ -12,10 +12,22 @@ mongoose.connect('mongodb://localhost:27017/receipt', {
 
 //Schema
 const ReceiptSchema = new mongoose.Schema({
-    _id:mongoose.Schema.Types.ObjectId,
-    receipt: {
-        type: String   
+    // _id:mongoose.Schema.Types.ObjectId,
+    transaction_from: {
+        type: String,
+        required:true   
+    },
+    transaction_to:{
+        type:String,
+        required:true   
+
+    },
+    value:{
+        type:String,
+        required:true   
+
     }
+
 
 });
 //Model

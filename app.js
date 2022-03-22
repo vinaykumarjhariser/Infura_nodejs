@@ -9,8 +9,10 @@ const app = express()
 app.use(express.json());
 const controller= require('./controller/controller.js');
 const receiptApi = require('./model/db.js');
-const port = 3000
+const bodyParser =require('body-parser');
+const port = 8000
 
+app.use(bodyParser.urlencoded({ extended: true }))
 // fetch a balance
 app.get('/balance', controller.balance);
 
